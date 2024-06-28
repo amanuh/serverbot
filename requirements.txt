@@ -1,0 +1,4 @@
+pyrogram
+requests
+python_aternos
+tgCrypto
