@@ -1,22 +1,17 @@
 from pyrogram import Client, filters
 import requests
-from python_aternos import Client as AternosClient
+
 
 # Replace these with your credentials
 api_id = '12997033'
 api_hash = '31ee7eb1bf2139d96a1147f3553e0364'
 bot_token = '6404091803:AAF4eI1cYt2BMxeRr_ZFqAJkElTGU11wao4'
-aternos_username = 'syble123'
-aternos_password = 'syble123#'
-SERVER_NAME_OR_ID = "Toman03"
+
 
 
 # Initialize Pyrogram client
 app = Client("minecraft_server_checker")
 
-# Initialize Aternos client
-aternos = AternosClient()
-aternos.login(aternos_username, aternos_password)
 
 
 @app.on_message(filters.command("start"))
