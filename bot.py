@@ -16,11 +16,11 @@ app = Client("minecraft_server_checker")
 
 @app.on_message(filters.command("start"))
 async def bot_online(client, message):
-    await message.reply_text("Bot is Online")
+    await message.reply_text("Alla Hu Akabar☝️☝️")
 
 @app.on_message(filters.command("check"))
 async def check_minecraft_server(client, message):
-    server_ip = "Toman03.aternos.me"  # Replace with your server IP or domain
+    server_ip = "istanbull.falixsrv.me"  # Replace with your server IP or domain
     url = f"https://api.mcsrvstat.us/2/{server_ip}"
 
     # Send a loading message
@@ -34,7 +34,7 @@ async def check_minecraft_server(client, message):
             player_count = data.get("players", {}).get("online", 0)
             result_message = f"✅ **The server is online with {player_count} players.**"
         else:
-            result_message = "❌ **The server is offline.**\n\n🔥 *Use /serverstart to start the server!*"
+            result_message = "❌ **The server is offline.**"
 
     except Exception as e:
         result_message = "An error occurred while checking the server status."
@@ -42,10 +42,5 @@ async def check_minecraft_server(client, message):
 
     # Edit the loading message with the result
     await loading_message.edit_text(result_message)
-
-# Register the start_server command from the commands module
-@app.on_message(filters.command("serverstart"))
-async def start_server(client, message):
-   await message.reply_text("soory this cmd is not ready yet")
 
 app.run()
