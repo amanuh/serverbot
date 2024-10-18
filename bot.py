@@ -5,7 +5,7 @@ import requests
 # Replace these with your credentials
 api_id = '12997033'
 api_hash = '31ee7eb1bf2139d96a1147f3553e0364'
-bot_token = '6404091803:AAF4eI1cYt2BMxeRr_ZFqAJkElTGU11wao4'
+bot_token = '8005696768:AAHsL6SGht0M97Iuwd2vKKFIT06CBUUW39E'
 
 
 
