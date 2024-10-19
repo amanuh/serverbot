@@ -17,7 +17,7 @@ async def bot_online(client, message):
 
 @app.on_message(filters.command("check"))
 async def check_minecraft_server(client, message):
-    server_ip = "mc.hypixel.net"  # Replace with your server IP or domain
+    server_ip = "istanbull.falixsrv.me"  # Replace with your server IP or domain
     api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
 
     # Send a loading message
