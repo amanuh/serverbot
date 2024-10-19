@@ -17,8 +17,8 @@ async def bot_online(client, message):
 
 @app.on_message(filters.command("check"))
 async def check_minecraft_server(client, message):
-    server_ip = "istanbull.falixsrv.me"  # Replace with your server IP or domain
-    api_url = f"https://eu.mc-api.net/v3/server/ping/{server_ip}"
+    server_ip = "mc.hypixel.net"  # Replace with your server IP or domain
+    api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
 
     # Send a loading message
     loading_message = await message.reply("Checking server status...")
@@ -29,21 +29,25 @@ async def check_minecraft_server(client, message):
             async with session.get(api_url) as response:
                 data = await response.json()
 
-        # Check if the server is online
-        if data.get("online", False):
-            player_count = data.get("players", {}).get("online", 0)
-            max_players = data.get("players", {}).get("max", 0)
-            result_message = (f"✅ **The server is online!**\n"
-                              f"Version: Fabric Java 1.21 \n"
-                              f"Players: {player_count}/{max_players}")
-        else:
-            result_message = "❌ **The server is offline.**\nGo to falixnodes.net/server/console to start the server."
+        # Extract specific variables from the JSON response
+        ip_address = data.get("ip", "N/A")
+        version = data.get("version", "Unknown")
+        player_count = data.get("players", {}).get("online", 0)
+        max_players = data.get("players", {}).get("max", 0)
+
+        # Create the response message with the selected variables
+
+        result_message = (f"**🖥️ Got Server Status!**\n"
+                          f"**🌐 IP**: {ip_address}\n"
+                          f"**🔄 Status**:** {version}**\n"
+                          f"**👥 Players: {player_count}/{max_players}**")
+
 
     except Exception as e:
         result_message = "An error occurred while checking the server status."
         print(f"Error: {e}")
 
-    # Edit the loading message with the result
+    # Edit the loading message with the selected variables
     await loading_message.edit_text(result_message)
 
 # Start the Pyrogram client
