@@ -12,7 +12,7 @@ app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_t
 
 @app.on_message(filters.command("start"))
 async def bot_online(client, message):
-    await message.reply_text("☝️☝️ Alla Hu Akabar")
+    await message.reply_text("Glory to the God !")
 
 
 @app.on_message(filters.command("check"))
