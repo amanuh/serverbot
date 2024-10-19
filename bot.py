@@ -31,11 +31,14 @@ async def check_minecraft_server(client, message):
 
         if data.get("online"):
             player_count = data.get("players", {}).get("online", 0)
-            max_players = data.get("players", {}).get("max", 0)
-            version = data.get("version", "Unknown")
+            max_players = data.get("players", {}).get("max", 0 )        
             result_message = (f"✅ **The server is online!**\n"
-                              f"Version: {version}\n"
+                              f"Version:Fabric Java 1.21 \n"
                               f"Players: {player_count}/{max_players}")
+
+        elif data.get("offline"):
+            result_message = " Serve is **offline** go to falixnodes.net/server/console to start the server 
+        
         else:
             result_message = "❌ **The server is offline.**"
 
