@@ -4,7 +4,7 @@ import aiohttp
 # Directly provide your credentials
 api_id = '12997033'
 api_hash = '31ee7eb1bf2139d96a1147f3553e0364'
-bot_token = '8005696768:AAHsL6SGht0M97Iuwd2vKKFIT06CBUUW39E'
+bot_token = '7840927612:AAEuphtFALZwxp6MwT36SQw_rQ0TSbKBHOk'
 
 # Initialize Pyrogram client with bot token
 app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
