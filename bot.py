@@ -37,8 +37,7 @@ async def check_minecraft_server(client, message):
                               f"Players: {player_count}/{max_players}")
 
         elif data.get("offline"):
-            result_message = " Serve is **offline** go to falixnodes.net/server/console to start the server 
-        
+            result_message = " Serve is **offline** go to falixnodes.net/server/console to start the server"        
         else:
             result_message = "❌ **The server is offline.**"
 
