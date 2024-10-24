@@ -1,11 +1,15 @@
 from pyrogram import Client, filters
 import aiohttp
+import json
+import os  # Import os to handle file paths
 
 # Store your credentials securely (avoid hardcoding)
 api_id = '12997033'
 api_hash = '31ee7eb1bf2139d96a1147f3553e0364'
 bot_token = '7840927612:AAEuphtFALZwxp6MwT36SQw_rQ0TSbKBHOk'
 
+server_ip = "istanbull.falixsrv.me"
+api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
 
 # Initialize Pyrogram client with bot token
 app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
@@ -16,9 +20,6 @@ async def bot_online(client, message):
 
 @app.on_message(filters.command("check"))
 async def check_minecraft_server(client, message):
-    server_ip = "istanbull.falixsrv.me"  # Replace with your server IP or domain
-    api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
-
     # Send a loading message
     loading_message = await message.reply("Checking server status...")
 
@@ -31,11 +32,12 @@ async def check_minecraft_server(client, message):
 
                 data = await response.json()
 
-        # Extract specific variables from the JSON response
+        # Extract specific variables from the JSON response, with default values
         ip_address = data.get("ip", "N/A")
         version = data.get("version", "Unknown")
-        player_count = data.get("players", {}).get("online", 0)
-        max_players = data.get("players", {}).get("max", 0)
+        players = data.get("players", {})
+        player_count = players.get("online", 0)
+        max_players = players.get("max", 0)
 
         # Create the response message with the selected variables
         result_message = (f"**🖥️ Server Status:**\n"
@@ -52,8 +54,6 @@ async def check_minecraft_server(client, message):
 
 @app.on_message(filters.command("players"))
 async def get_players_list(client, message):
-    server_ip = "istanbull.falixsrv.me"  # Replace with your server IP or domain
-    api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
 
     # Send a loading message
     loading_message = await message.reply("Fetching list of players...")
@@ -82,6 +82,39 @@ async def get_players_list(client, message):
 
     # Edit the loading message with the players list or error message
     await loading_message.edit_text(result_message)
+
+@app.on_message(filters.command("json"))
+async def get_json_response(client, message):
+
+    # Send a loading message
+    loading_message = await message.reply("Fetching JSON response...")
+
+    try:
+        # Use aiohttp for asynchronous requests
+        async with aiohttp.ClientSession() as session:
+            async with session.get(api_url) as response:
+                if response.status != 200:
+                    raise Exception(f"Failed to fetch data. HTTP status code: {response.status}")
+
+                data = await response.json()
+
+        # Define the file path
+        file_path = "minecraft_server_status.txt"
+
+        # Write the JSON data to a text file
+        with open(file_path, "w") as file:
+            json.dump(data, file, indent=4)
+
+        # Send the text file to the user
+        await client.send_document(message.chat.id, file_path, caption="Here is the JSON response.")
+
+        # Clean up the file after sending
+        os.remove(file_path)
+
+    except Exception as e:
+        result_message = "An error occurred while fetching the JSON response."
+        print(f"Error: {e}")  # Log error for debugging purposes
+        await loading_message.edit_text(result_message)
 
 # Start the Pyrogram client
 if __name__ == "__main__":
