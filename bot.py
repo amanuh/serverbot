@@ -2,6 +2,7 @@ from pyrogram import Client, filters
 import aiohttp
 import json
 import os  # Import os to handle file paths
+import ping 
 
 # Store your credentials securely (avoid hardcoding)
 api_id = '12997033'
