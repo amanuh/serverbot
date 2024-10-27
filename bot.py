@@ -118,7 +118,7 @@ async def get_json_response(client, message):
         await loading_message.edit_text(result_message)
 
 
-app.add_handler(Client.on_message(filters.command('ping'),ping_command())
+app.add_handler(Client.on_message(filters.command("ping"),ping_command))
 
 # Start the Pyrogram client
 if __name__ == "__main__":
