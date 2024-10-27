@@ -2,7 +2,6 @@ from pyrogram import Client, filters
 import aiohttp
 import time
 
-@Client.on_message(filters.command("ping"))
 async def ping_command(client, message):
     
     # Send a loading message
