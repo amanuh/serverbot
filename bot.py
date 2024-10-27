@@ -2,7 +2,7 @@ from pyrogram import Client, filters
 import aiohttp
 import json
 import os  # Import os to handle file paths
-import ping 
+from ping import ping_command
 
 # Store your credentials securely (avoid hardcoding)
 api_id = '12997033'
@@ -116,6 +116,9 @@ async def get_json_response(client, message):
         result_message = "An error occurred while fetching the JSON response."
         print(f"Error: {e}")  # Log error for debugging purposes
         await loading_message.edit_text(result_message)
+
+
+app.add_handler(Client.on_message(filters.command('ping'),ping_command())
 
 # Start the Pyrogram client
 if __name__ == "__main__":
