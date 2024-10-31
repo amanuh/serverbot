@@ -24,11 +24,14 @@ api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
 # Initialize Pyrogram client with bot token
 app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
+@app.on_message(filters.command("start") & filters.private)
+async def bot_online(client, message):
+    await message.reply_text("For private use only")
+    
 @app.on_message(filters.command("start"))
 async def bot_online(client, message):
-    await message.reply_text("Glory to the God !")
+    await message.reply_text("Glory To The God !")
     
-
 @app.on_message(filters.command("check") & filters.chat(grp_id))
 async def check_minecraft_server(client, message):
     loading_message = await message.reply("Checking server status...")
