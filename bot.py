@@ -4,7 +4,7 @@ import json
 import os
 import logging
 import time  
-
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 # Configure logging
 logging.basicConfig(
@@ -20,6 +20,7 @@ bot_token = '7840927612:AAEuphtFALZwxp6MwT36SQw_rQ0TSbKBHOk'
 grp_id = -1002308237145 
 server_ip = "istanbull.falixsrv.me"
 api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
+webapp_url = "https://mcapi.us/server/image?ip=istanbull.falixsrv.me"
 
 # Initialize Pyrogram client with bot token
 app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
@@ -30,7 +31,17 @@ async def bot_online(client, message):
     
 @app.on_message(filters.command("start") & filters.chat(grp_id))
 async def bot_online(client, message):
-    await message.reply_text("Glory To The God !")
+     
+    # Create the buttons
+    buttons = [
+        [InlineKeyboardButton("Server ", web_app=WebAppInfo(url=webapp_url))]
+    ]
+    # Create the keyboard
+    keyboard = InlineKeyboardMarkup(buttons)
+
+    # Send the message with the keyboard
+    await message.reply_text("Glory To The God", reply_markup=keyboard)
+    
     
 @app.on_message(filters.command("check") & filters.chat(grp_id))
 async def check_minecraft_server(client, message):
