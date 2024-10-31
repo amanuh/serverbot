@@ -28,7 +28,7 @@ app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_t
 async def bot_online(client, message):
     await message.reply_text("For private use only")
     
-@app.on_message(filters.command("start"))
+@app.on_message(filters.command("start") & filters.chat(grp_id))
 async def bot_online(client, message):
     await message.reply_text("Glory To The God !")
     
@@ -64,32 +64,7 @@ async def check_minecraft_server(client, message):
 
     await loading_message.edit_text(result_message)
 
-@app.on_message(filters.command("players"))
-async def get_players_list(client, message):
-    loading_message = await message.reply("Fetching list of players...")
-    
 
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(api_url) as response:
-                if response.status != 200:
-                    raise Exception(f"Failed to fetch data. HTTP status code: {response.status}")
-
-                data = await response.json()
-
-        player_names = data.get("players", {}).get("list", [])
-        if player_names:
-            result_message = "**👥 Players currently online:**\n" + "\n".join(player_names)
-        else:
-            result_message = "No players are currently online."
-
-       
-
-    except Exception as e:
-        result_message = "An error occurred while fetching the players list."
-        logging.error(f"Error while fetching players list: {e}")
-
-    await loading_message.edit_text(result_message)
 
 @app.on_message(filters.command("json") & filters.chat(grp_id))
 async def get_json_response(client, message):
