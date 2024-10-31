@@ -93,7 +93,7 @@ async def get_json_response(client, message):
         logging.error(f"Error while fetching JSON response: {e}")
         await loading_message.edit_text(result_message)
 
-@app.on_message(filters.command("ping"))
+@app.on_message(filters.command("ping") & filters.chat(grp_id))
 async def ping_server(client, message):
     loading_message = await message.reply("Pinging the Minecraft Server...")
     
