@@ -129,7 +129,48 @@ async def ping_server(client, message):
 
 
 
-# Start the Pyrogram client
+
+
+# Target chat and users list
+target_chat_id = '-1002308237145'  # Replace with your group chat ID or username
+users = ['usernamw0', 'Whymeleft', 'unknown_whitey', 'px181']
+current_user_index = 0
+last_message_id = None
+
+# Function to send and delete messages
+def send_and_delete_message():
+    global current_user_index, last_message_id
+
+    # Delete previous message if exists
+    if last_message_id:
+        with app:
+            app.delete_messages(chat_id=target_chat_id, message_ids=last_message_id)
+
+    # Send a new message tagging the next user
+    user_to_tag = users[current_user_index]
+    with app:
+        message = app.send_message(target_chat_id, f"its your turn to 'Add Time', @{user_to_tag}!")
+        last_message_id = message.message_id
+
+    # Move to the next user in the list
+    current_user_index = (current_user_index + 1) % len(users)
+
+# Schedule to run every 2 hours
+schedule.every(2).hours.do(send_and_delete_message)
+
+# Main loop to keep the bot running and check schedule
+def run_bot():
+    with app:
+        while True:
+            schedule.run_pending()
+            time.sleep(60)  # Check every minute for tasks
+
+# Start bot
+run_bot()
+
+
+
+ the Pyrogram client
 if __name__ == "__main__":
     logging.info("Starting the bot...")
     app.run()
