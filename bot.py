@@ -107,7 +107,7 @@ async def ping_server(client, message):
         end_time = time.time()  # Record the end time
         ping_time = (end_time - start_time) * 1000  # Convert to milliseconds
 
-        result_message = f"**🏓 Server Ping:** {ping_time:.2f} ms"
+        result_message = f"**🏓 Bot Ping:** {ping_time:.2f} ms"
         
 
     except Exception as e:
