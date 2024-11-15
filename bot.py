@@ -20,17 +20,7 @@ bot_token = '7840927612:AAEuphtFALZwxp6MwT36SQw_rQ0TSbKBHOk'
 grp_id = -1002308237145 
 server_ip = "srv20011.host2play.gratis"
 api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
-MESSAGE = '''
 
-🌟 **Welcome to Istanbul Server!** 🌟  \n
-
-Hey there, adventurers! 🧱⚒️ Whether you're here to build epic castles, conquer dungeons, or just chill with friends, you're in the right place.  \n
-Use /rule to see rules\n
-💬 Got questions? Need help? Just ask – we're all in this blocky world together!  \n
-
-Now grab your pickaxe, and let the adventure begin! 🎮✨  \n
-
-Happy crafting, everyone! 🏰🌌  '''
 
 
 # Initialize Pyrogram client with bot token
@@ -127,26 +117,6 @@ async def ping_server(client, message):
         logging.error(f"Error while pinging server: {e}")
 
     await loading_message.edit_text(result_message)
-
-
-@app.on_message(filters.chat(grp_id) & filters.new_chat_members)
-async def welcome(client, message):
-    # Build the new members list (with mentions) by using their first_name
-    new_members = [u.mention for u in message.new_chat_members]
-    # Build the welcome message by using an emoji and the list we built above
-    text = MESSAGE.format(emoji.SPARKLES, ", ".join(new_members))
-    # Send the welcome message, without the web page preview
-    await message.reply_text(text, disable_web_page_preview=True)
-
-@app.on_message(filters.command("ex") & filters.private)
-    await message.reply('''Here are a few ground rules to keep the vibe awesome: \n 
-                           1️⃣ Respect everyone – we're all here for fun!  \n
-                           2️⃣ No griefing or stealing – teamwork makes the dream work. \n 
-                           3️⃣ Keep the chat clean and friendly.  \n
-                           4️⃣ Share your ideas, builds, and discoveries – we'd love to see them!  \n''')
-
-
-
 
 
 
