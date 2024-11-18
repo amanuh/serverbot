@@ -56,7 +56,8 @@ async def check_minecraft_server(client, message):
         result_message = (f"**🖥️ Server Status:**\n"
                           f"**🌐 Server Address**: `srv20011.host2play.gratis`\n"
                           f"**🔄 Status**: {version}\n"
-                          f"**👥 Players**: {player_count}/{max_players}")
+                          f"**👥 Players**: {player_count}/{max_players}\n"
+                          f"[Renew Server](https://host2play.gratis/server/renew?i=1b131c4a-b306-4826-95fe-b2e9469aaa66), if stopped\n")
 
         
 
