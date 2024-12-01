@@ -6,13 +6,13 @@ import logging
 import time  
 
 
-# Configure logging
+# logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-# Store your credentials securely (avoid hardcoding)
+# credentials 
 api_id = '12997033'
 api_hash = '31ee7eb1bf2139d96a1147f3553e0364'
 bot_token = '7840927612:AAEuphtFALZwxp6MwT36SQw_rQ0TSbKBHOk'
@@ -23,14 +23,14 @@ api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
 
 
 
-# Initialize Pyrogram client with bot token
+# client starting 
 app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 @app.on_message(filters.command("start"))
 async def bot_online(client, message):
     await message.reply_text("Glory To The God !")
     
-
+#check cmd
 @app.on_message(filters.command("check") & filters.chat(grp_id))
 async def check_minecraft_server(client, message):
     loading_message = await message.reply("Checking server status...")
@@ -67,7 +67,7 @@ async def check_minecraft_server(client, message):
 
     await loading_message.edit_text(result_message)
 
-
+#json cmd
 @app.on_message(filters.command("json") & filters.chat(grp_id))
 async def get_json_response(client, message):
     loading_message = await message.reply("Fetching JSON response...")
@@ -95,20 +95,21 @@ async def get_json_response(client, message):
         logging.error(f"Error while fetching JSON response: {e}")
         await loading_message.edit_text(result_message)
 
+#ping cmd
 @app.on_message(filters.command("ping"))
 async def ping_server(client, message):
     loading_message = await message.reply("Pinging the Minecraft Server...")
     
     
-    start_time = time.time()  # Record the start time
+    start_time = time.time()  
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(api_url) as response:
                 if response.status != 200:
                     raise Exception(f"Failed to fetch data. HTTP status code: {response.status}")
 
-        end_time = time.time()  # Record the end time
-        ping_time = (end_time - start_time) * 1000  # Convert to milliseconds
+        end_time = time.time()  
+        ping_time = (end_time - start_time) * 1000  
 
         result_message = f"**🏓 Bot Ping:** {ping_time:.2f} ms"
         
@@ -122,7 +123,7 @@ async def ping_server(client, message):
 
 
 
-# Start the Pyrogram client
+# calling functions 
 if __name__ == "__main__":
     logging.info("Starting the bot...")
     app.run()
