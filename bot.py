@@ -137,20 +137,35 @@ async def message_handler(client: Client, message: Message):
             logging.error(f"Error writing to AFK file: {e}")
         await message.reply("Welcome back!")
 
-@app.on_message(filters.mentioned or filters.reply)
+@app.on_message(filters.mentioned | filters.reply)
 async def mention_reply_handler(client: Client, message: Message):
+    # Handle reply mentions
     if message.reply_to_message:
         afk_user = afk_users.get(message.reply_to_message.from_user.id)
         if afk_user:
             reason = afk_user["reason"] or "No reason given."
-            await message.reply(f"The user you're trying to talk to is AFK: {reason}")
-    elif message.entities:
-        mentioned_ids = [entity.user.id for entity in message.entities if entity.type == "mention"]
-        for user_id in mentioned_ids:
-            afk_user = afk_users.get(user_id)
-            if afk_user:
-                reason = afk_user["reason"] or "No reason given."
-                await message.reply(f"The user with ID {user_id} is AFK: {reason}")
+            await message.reply(f"{user.first_name} is AFK: {reason}")
+            return
+
+    # Handle direct mentions
+    if message.entities:
+        for entity in message.entities:
+            if entity.type == "mention":
+                username = message.text[entity.offset : entity.offset + entity.length].lstrip("@")
+                try:
+                    # Fetch user details by username
+                    user = await client.get_users(username)
+                    afk_user = afk_users.get(user.id)
+                    if afk_user:
+                        reason = afk_user["reason"] or "No reason given."
+                        await message.reply(f"{user.first_name} is AFK: {reason}")
+                except Exception:
+                    pass
+            elif entity.type == "text_mention" and entity.user:
+                afk_user = afk_users.get(entity.user.id)
+                if afk_user:
+                    reason = afk_user["reason"] or "No reason given."
+                    await message.reply(f"{entity.user.first_name} is AFK: {reason}")
 
 # Run the bot
 if __name__ == "__main__":
