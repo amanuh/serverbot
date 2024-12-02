@@ -137,7 +137,7 @@ async def message_handler(client: Client, message: Message):
             logging.error(f"Error writing to AFK file: {e}")
         await message.reply("Welcome back!")
 
-@app.on_message(filters.mentioned | filters.reply)
+@app.on_message(filters.mentioned or filters.reply)
 async def mention_reply_handler(client: Client, message: Message):
     if message.reply_to_message:
         afk_user = afk_users.get(message.reply_to_message.from_user.id)
@@ -145,9 +145,7 @@ async def mention_reply_handler(client: Client, message: Message):
             reason = afk_user["reason"] or "No reason given."
             await message.reply(f"The user you're trying to talk to is AFK: {reason}")
     elif message.entities:
-        mentioned_ids = [
-            entity.user.id for entity in message.entities if entity.type == "mention"
-        ]
+        mentioned_ids = [entity.user.id for entity in message.entities if entity.type == "mention"]
         for user_id in mentioned_ids:
             afk_user = afk_users.get(user_id)
             if afk_user:
