@@ -4,6 +4,7 @@ import json
 import os
 import logging
 import time  
+from pyrogram.types import Message
 
 
 # logging
@@ -21,7 +22,7 @@ grp_id = -1002308237145
 server_ip = "srv20011.host2play.gratis"
 api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
 
-
+AFK_FILE = "afk_status.json"
 
 # client starting 
 app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
@@ -121,7 +122,57 @@ async def ping_server(client, message):
     await loading_message.edit_text(result_message)
 
 
+# Load AFK users or initialize
+afk_users = {}
+if os.path.exists(AFK_FILE):
+    try:
+        with open(AFK_FILE, "r") as f:
+            afk_users = json.load(f)
+    except json.JSONDecodeError:
+        afk_users = {}
 
+@app.on_message(filters.command(["afk"]))
+async def afk_handler(client: Client, message: Message):
+    reason = message.text.split(" ", 1)[1] if len(message.text.split()) > 1 else None
+    afk_users[message.from_user.id] = {"reason": reason}
+    await message.reply("You are now AFK.")
+    try:
+        with open(AFK_FILE, "w") as f:
+            json.dump(afk_users, f, indent=4)
+    except Exception as e:
+        print(f"Error writing to AFK file: {e}")
+
+
+@app.on_message(filters.text)
+async def message_handler(client: Client, message: Message):
+    if message.from_user.id in afk_users:
+        del afk_users[message.from_user.id]
+        try:
+            with open(AFK_FILE, "w") as f:
+                json.dump(afk_users, f, indent=4)
+        except Exception as e:
+            print(f"Error writing to AFK file: {e}")
+        await message.reply("Welcome back!")
+
+
+@app.on_message(filters.mentioned | filters.reply)
+async def mention_reply_handler(client: Client, message: Message):
+    if message.reply_to_message:
+        afk_user = afk_users.get(message.reply_to_message.from_user.id)
+        if afk_user:
+            reason = afk_user["reason"] or "No reason given."
+            await message.reply(f"The user you're trying to talk to is AFK: {reason}")
+    elif message.entities:
+        mentioned_ids = [
+            entity.user.id for entity in message.entities if entity.type == "mention"
+        ]
+        for user_id in mentioned_ids:
+            afk_user = afk_users.get(user_id)
+            if afk_user:
+                reason = afk_user["reason"] or "No reason given."
+                await message.reply(f"The user with ID {user_id} is AFK: {reason}")
+
+        
 
 # calling functions 
 if __name__ == "__main__":
