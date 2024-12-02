@@ -139,33 +139,39 @@ async def message_handler(client: Client, message: Message):
 
 @app.on_message(filters.mentioned | filters.reply)
 async def mention_reply_handler(client: Client, message: Message):
-    # Handle reply mentions
+    # Check if it's a reply
     if message.reply_to_message:
         afk_user = afk_users.get(message.reply_to_message.from_user.id)
         if afk_user:
             reason = afk_user["reason"] or "No reason given."
-            await message.reply(f"{user.first_name} is AFK: {reason}")
+            user_name = message.reply_to_message.from_user.first_name
+            await message.reply(f"The user {user_name} is AFK: {reason}")
             return
 
-    # Handle direct mentions
+    # Check if it's a mention
     if message.entities:
         for entity in message.entities:
-            if entity.type == "mention":
+            if entity.type == "text_mention" and entity.user:  # Handle direct user mentions
+                afk_user = afk_users.get(entity.user.id)
+                if afk_user:
+                    reason = afk_user["reason"] or "No reason given."
+                    user_name = entity.user.first_name
+                    await message.reply(f"The user {user_name} is AFK: {reason}")
+                    return
+            elif entity.type == "mention":  # Handle username mentions
                 username = message.text[entity.offset : entity.offset + entity.length].lstrip("@")
                 try:
-                    # Fetch user details by username
                     user = await client.get_users(username)
                     afk_user = afk_users.get(user.id)
                     if afk_user:
                         reason = afk_user["reason"] or "No reason given."
-                        await message.reply(f"{user.first_name} is AFK: {reason}")
-                except Exception:
-                    pass
-            elif entity.type == "text_mention" and entity.user:
-                afk_user = afk_users.get(entity.user.id)
-                if afk_user:
-                    reason = afk_user["reason"] or "No reason given."
-                    await message.reply(f"{entity.user.first_name} is AFK: {reason}")
+                        user_name = user.first_name
+                        await message.reply(f"The user {user_name} is AFK: {reason}")
+                        return
+                except Exception as e:
+                    # Log or handle errors (e.g., user not found)
+                    print(f"Error fetching user: {e}")
+                          
 
 # Run the bot
 if __name__ == "__main__":
