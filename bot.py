@@ -27,6 +27,7 @@ AFK_FILE = "afk_status.json"
 # Start client
 app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
+'''
 # AFK users dictionary
 afk_users = {}
 if os.path.exists(AFK_FILE):
@@ -35,12 +36,12 @@ if os.path.exists(AFK_FILE):
             afk_users = json.load(f)
     except json.JSONDecodeError:
         logging.error("AFK file corrupted. Starting fresh.")
-        afk_users = {}
+        afk_users = {} '''
 
 # Commands
 @app.on_message(filters.command("start"))
 async def bot_online(client, message):
-    await message.reply_text("Bot is online and ready to assist!")
+    await message.reply_text("Glory to God!")
 
 @app.on_message(filters.command("check") & filters.chat(grp_id))
 async def check_minecraft_server(client, message):
@@ -117,16 +118,16 @@ async def ping_server(client, message):
 
 @app.on_message(filters.command(["afk"]))
 async def afk_handler(client: Client, message: Message):
-    reason = message.text.split(" ", 1)[1] if len(message.text.split()) > 1 else None
-    afk_users[message.from_user.id] = {"reason": reason}
-    await message.reply("You are now AFK.")
-    try:
+    '''reason = message.text.split(" ", 1)[1] if len(message.text.split()) > 1 else None
+    afk_users[message.from_user.id] = {"reason": reason}'''
+    await message.reply("Play minecraft instead of spamming in grp.")
+    '''try:
         with open(AFK_FILE, "w") as f:
             json.dump(afk_users, f, indent=4)
     except Exception as e:
-        logging.error(f"Error writing to AFK file: {e}")
+        logging.error(f"Error writing to AFK file: {e}")'''
 
-@app.on_message(filters.text)
+'''@app.on_message(filters.text)
 async def message_handler(client: Client, message: Message):
     if message.from_user.id in afk_users:
         del afk_users[message.from_user.id]
@@ -170,7 +171,7 @@ async def mention_reply_handler(client: Client, message: Message):
                         return
                 except Exception as e:
                     # Log or handle errors (e.g., user not found)
-                    print(f"Error fetching user: {e}")
+                    print(f"Error fetching user: {e}")  '''
                           
 
 # Run the bot
