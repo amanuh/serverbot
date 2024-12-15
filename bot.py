@@ -22,21 +22,11 @@ grp_id = -1002308237145
 server_ip = "srv20011.host2play.gratis"
 api_url = f"https://api.mcsrvstat.us/3/{server_ip}"
 
-AFK_FILE = "afk_status.json"
+
 
 # Start client
 app = Client("minecraft_server_checker", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
-'''
-# AFK users dictionary
-afk_users = {}
-if os.path.exists(AFK_FILE):
-    try:
-        with open(AFK_FILE, "r") as f:
-            afk_users = json.load(f)
-    except json.JSONDecodeError:
-        logging.error("AFK file corrupted. Starting fresh.")
-        afk_users = {} '''
 
 # Commands
 @app.on_message(filters.command("start"))
@@ -116,63 +106,6 @@ async def ping_server(client, message):
 
     await loading_message.edit_text(result_message)
 
-@app.on_message(filters.command(["afk"]))
-async def afk_handler(client: Client, message: Message):
-    '''reason = message.text.split(" ", 1)[1] if len(message.text.split()) > 1 else None
-    afk_users[message.from_user.id] = {"reason": reason}'''
-    await message.reply("Play minecraft instead of spamming in grp.")
-    '''try:
-        with open(AFK_FILE, "w") as f:
-            json.dump(afk_users, f, indent=4)
-    except Exception as e:
-        logging.error(f"Error writing to AFK file: {e}")'''
-
-'''@app.on_message(filters.text)
-async def message_handler(client: Client, message: Message):
-    if message.from_user.id in afk_users:
-        del afk_users[message.from_user.id]
-        try:
-            with open(AFK_FILE, "w") as f:
-                json.dump(afk_users, f, indent=4)
-        except Exception as e:
-            logging.error(f"Error writing to AFK file: {e}")
-        await message.reply("Welcome back!")
-
-@app.on_message(filters.mentioned | filters.reply)
-async def mention_reply_handler(client: Client, message: Message):
-    # Check if it's a reply
-    if message.reply_to_message:
-        afk_user = afk_users.get(message.reply_to_message.from_user.id)
-        if afk_user:
-            reason = afk_user["reason"] or "No reason given."
-            user_name = message.reply_to_message.from_user.first_name
-            await message.reply(f"The user {user_name} is AFK: {reason}")
-            return
-
-    # Check if it's a mention
-    if message.entities:
-        for entity in message.entities:
-            if entity.type == "text_mention" and entity.user:  # Handle direct user mentions
-                afk_user = afk_users.get(entity.user.id)
-                if afk_user:
-                    reason = afk_user["reason"] or "No reason given."
-                    user_name = entity.user.first_name
-                    await message.reply(f"The user {user_name} is AFK: {reason}")
-                    return
-            elif entity.type == "mention":  # Handle username mentions
-                username = message.text[entity.offset : entity.offset + entity.length].lstrip("@")
-                try:
-                    user = await client.get_users(username)
-                    afk_user = afk_users.get(user.id)
-                    if afk_user:
-                        reason = afk_user["reason"] or "No reason given."
-                        user_name = user.first_name
-                        await message.reply(f"The user {user_name} is AFK: {reason}")
-                        return
-                except Exception as e:
-                    # Log or handle errors (e.g., user not found)
-                    print(f"Error fetching user: {e}")  '''
-                          
 
 # Run the bot
 if __name__ == "__main__":
